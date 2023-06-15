@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Data Fetcher</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            margin: 5px 0;
+            color: white;
+            background-color: #0f9d58;
+        }
+    </style>
+</head>
+<body>
+
+<body>
+    <header>
+    <h1>AD7SGPR Google Sheets データ取得Appβ</h1>
+    <nav>
+        <a href="index.html">TOP</a>
+        <a href="10manual.html">How to use</a>
+        <a href="https://bit-trade-one.co.jp/">BTO HP</a>
+        <a href="https://github.com/bit-trade-one/AD7SGPR-youtubeCh">GitHub</a>
+      </nav>
+      <br>
+    </header>
+    <label for="api-key">APIキー:</label>
+    <input type="text" id="api-key">
+    <br>
+    <label for="sheet-id">スプレッドシートID:</label>
+    <input type="text" id="sheet-id">
+    <br>
+    <label for="cell-range">セル範囲:</label>
+    <input type="text" id="cell-range" placeholder="例: シート1!A1">
+    <br>
+    <label for="update-interval">更新間隔:</label>
+    <input type="number" id="update-interval" value="10">
+    <br>
+    <button id="update-button">データ取得</button>
+    <br>
+    <div>
+        <h2>セルの値:</h2>
+        <p id="cell-value"></p>
+    </div>
+    <!-- シリアル通信用のUI -->
+    <button id="serial-connect-button" class="youtube-red">シリアル接続</button>
+    <br>
+    <textarea id="serial-output" rows="10" cols="50" readonly></textarea>
+    <script>
+        let port;
+        let reader;
+        let inputDone;
+        let outputDone;
+        let inputStream;
+        let outputStream;
+        const serialOutput = document.getElementById('serial-output');
+
+        async function connect() {
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 115200 });
+                const encoder = new TextEncoderStream();
+                outputDone = encoder.readable.pipeTo(port.writable);
+                outputStream = encoder.writable;
+                let decoder = new TextDecoderStream();
+                inputDone = port.readable.pipeTo(decoder.writable);
+                inputStream = decoder.readable;
+                reader = inputStream.getReader();
+                readLoop();
+                // Connectした直後に現在のセルの値を送信
+                let cellValue = document.getElementById("cell-value").innerText;
+                await sendText(`${cellValue}\r\n`);
+            } catch (error) {
+                console.error("Error connecting to serial port: ", error);
+            }
+        }
+
+        async function disconnect() {
+            try {
+                if (reader) {
+                    await reader.cancel();
+                    await inputDone.catch(() => { });
+                    reader = null;
+                    inputDone = null;
+                }
+                if (outputStream) {
+                    await outputStream.getWriter().close();
+                    await outputDone;
+                    outputStream = null;
+                    outputDone = null;
+                }
+                await port.close();
+                port = null;
+            } catch (error) {
+                console.error("Error disconnecting from serial port: ", error);
+            }
+        }
+
+        async function readLoop() {
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (value) {
+                        serialOutput.value += value;
+                        serialOutput.scrollTop = serialOutput.scrollHeight;
+                    }
+                    if (done) {
+                        serialOutput.textContent += '[シリアル接続が切断されました]\n';
+                        await disconnect();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error("Error reading from serial port: ", error);
+            }
+        }
+
+        async function sendText(text) {
+            try {
+                const writer = outputStream.getWriter();
+                await writer.write(text);
+                await writer.close();
+            } catch (error) {
+                console.error("Error writing to serial port: ", error);
+            }
+        }
+
+        function fetchSheetData() {
+            let apiKey = document.getElementById("api-key").value;
+            let sheetId = document.getElementById("sheet-id").value;
+            let cellRange = document.getElementById("cell-range").value;
+            let sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${cellRange}?key=${apiKey}`;
+
+            fetch(sheetUrl)
+                .then(response => response.json())
+                .then(async data => {
+                    if (data.error) {
+                        console.error("Error fetching data", data.error.message);
+                        return;
+                    }
+                    let cellValue = data.values[0][0];
+                    document.getElementById("cell-value").innerText = cellValue;
+                    if (port) {
+                        await sendText(`${cellValue}\r\n`);
+                    }
+                })
+                .catch(err => console.error("Error fetching data", err));
+        }
+
+        function startAutoUpdate(interval) {
+            return setInterval(fetchSheetData, interval * 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let updateButton = document.getElementById("update-button");
+            let intervalInput = document.getElementById("update-interval");
+            let autoUpdate;
+
+            updateButton.addEventListener("click", function () {
+                fetchSheetData();
+                clearInterval(autoUpdate);
+                let interval = intervalInput.value;
+                if (interval != "manual") {
+                    autoUpdate = startAutoUpdate(interval);
+                }
+            });
+
+            document.getElementById('serial-connect-button').addEventListener('click', async () => {
+                if (!port) {
+                    await connect();
+                } else {
+                    await disconnect();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
