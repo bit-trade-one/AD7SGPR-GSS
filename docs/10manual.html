@@ -2,35 +2,142 @@
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets Data Fetcher</title>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        button {
-            color: white;
-            background-color: #0f9d58;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Spread Sheets Data Fetcher</title>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+      }
+      button {
+          color: white;
+          background-color: #0f9d58;
+      }
+  </style>
 </head>
-
 <body>
 
-    <body>
-        <header>
-            <h1>AD7SGPR Google Sheets データ取得Appβ</h1>
-            <nav>
-                <a href="index.html">TOP</a>
-                <a href="10manual.html">How to use</a>
-                <a href="https://bit-trade-one.co.jp/">BTO HP</a>
-                <a href="https://github.com/bit-trade-one/AD7SGPR-GSS">GitHub</a>
-            </nav>
-            <br>
-        </header>
-        <h1>使い方ページ(工事中)</h1>
+  <body>
+    <header>
+    <h1>AD7SGPR Google Spread Sheets データ取得Appβ</h1>
+    <nav>
+      <a href="index.html">TOP</a>
+      <a href="10manual.html">How to use</a>
+      <a href="https://bit-trade-one.co.jp/">BTO HP</a>
+      <a href="https://github.com/bit-trade-one/AD7SGPR-youtubeCh">GitHub</a>
+    </nav>
+    <br>
+  </header><hr>
 
-        <body></body>
+  <details>
+      <summary>Google Sheets APIキーの取得方法</summary>
+      <p>
+        1. <strong>Google Cloud Consoleにログインします</strong><br>
+        <a href="https://console.cloud.google.com/"target="_blank">https://console.cloud.google.com/</a> にアクセスしてGoogleアカウントでログインします。<br>
+        <br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-youtubeCh/assets/85532743/e12b2460-4fdf-48ed-879e-0d4910d7e558"
+          alt="Google Cloud Console Login" width="680"><br><br>
+      </p>
+  
+      <p>
+        2. <strong>プロジェクトを選択または作成します</strong><br>
+        上部のプロジェクトドロップダウンから新しいプロジェクトを作成します。<br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-youtubeCh/assets/85532743/f0ebaef8-df64-4b9a-a3be-26c05d1e4968"
+        alt="Project Selection" width="680"><br>
+      <img src="https://github.com/bit-trade-one/AD7SGPR-youtubeCh/assets/85532743/1620dfe2-abe7-4e29-84c4-301045ccaaca"
+        alt="Project Selection" width="680">
+        <br><br>
+      </p>
+  
+      <p>
+        3. <strong>ナビゲーションメニューを開き、「APIとサービス」を選択します</strong><br>
+        左上のナビゲーションメニュー（三本線アイコン）をクリックして、「APIとサービス」を選択します。<br>
+        その後、ドロップダウンから「ライブラリ」をクリックします。<br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-youtubeCh/assets/85532743/9504d650-ab32-4c33-9a0d-4d7a8907c305"
+          alt="Navigation Menu" width="680"><br><br>
+      </p>
+  
+      <p>
+        4. <strong>Google Sheets APIを探して有効にします</strong><br>
+        APIライブラリで「Google Sheets API」を検索し、そのページに移動します。<br>ページにある「有効にする」ボタンをクリックします。<br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-GSS/assets/85532743/1b8bf3f2-a3ea-44c0-9b48-0a4a0f22020e"
+          alt="Google Sheets API" width="680"><br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-GSS/assets/85532743/169d0f35-8658-4754-abb4-f69f91b426dc"
+          alt="Google Sheets API Activation" width="680"><br>
+        <br><br>
+      </p>
+  
+      <p>
+        5. <strong>認証情報を作成します</strong><br>
+        APIを有効にした後、左側のメニューから「認証情報」を選択します。<br>次に「認証情報を作成」をクリックし、「APIキー」を選択します。<br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-youtubeCh/assets/85532743/d2eff24e-2732-4457-8c2c-c08f3bb94ba2"
+        alt="Credentials Creation"width="680">
+      </p>
+  
+      <p>
+        6. <strong>APIキーを取得します</strong><br>
+        新しいキーを生成したら、そのキーをコピーして安全な場所に保存します。<br>このキーがGoogle Sheets APIの認証情報となります。<br>
+        ※画像下段に書いてある通り制限を設けることをおすすめします。同画面リンクをご確認ください。<br>
+        <img src="https://github.com/bit-trade-one/AD7SGPR-youtubeCh/assets/85532743/b3d9dc5b-9d8f-4de7-9450-82b20434ec49"
+        alt="API Key"width="680">
+      </p>
+    </details>
+  <hr>
+  <h1>本アプリの使用方法</h1>
+
+
+  <fieldset>
+    <legend>App画像</legend>
+
+    <section>
+      
+      <img src="https://github.com/bit-trade-one/AD7SGPR-GSS/assets/85532743/337e8569-0743-4766-b4dd-cd833f219f20"
+        alt="App画像">
+    </section>
+  </fieldset>
+
+  <section>
+    <h2>1. APIキーの入力</h2>
+
+    <p>Google Cloud Consoleから取得したAPIキーを「APIキー:」フィールドに入力します。<br><br></p>
+  </section>
+
+
+
+  <section>
+    <h2>2. スプレッドシートID・シート・セル名の入力</h2>
+
+    <p>取得したいスプレッドシートのIDを「スプレッドシートID:」フィールドに入力します。<br>
+      スプレッドシートIDはURLの以下の箇所に含まれています。<br>
+      https://docs.google.com/spreadsheets/d/<strong>スプレッドシートID</strong>/edit<br>
+      セル範囲の中に「シート名!セル番号」を記述してください。<br><br></p>
+  </section>
+
+  <section>
+    <h2>3. 取得頻度の設定</h2>
+
+    <p>「取得頻度（秒）:」フィールドに、何秒ごとに新しい登録者数を取得するかを入力します。デフォルトは10秒です。<br><br></p>
+  </section>
+
+  <section>
+    <h2>4. データ取得開始</h2>
+
+    <p>すべてのフィールドが適切に入力されたら、「データ取得」ボタンをクリックします。すると、アプリケーションは指定した頻度で値を取得し、
+      「セルの値:」の横に表示します。<br><br></p>
+  </section>
+
+  <section>
+    <h2>5. シリアル接続</h2>
+
+    <p>
+      取得した登録者数をシリアルデバイスに送信することも可能です。そのためには、「シリアル接続」ボタンをクリックします。
+      <br><br></p>
+  </section>
+
+  <p>注意：APIの使用制限により、取得頻度が高すぎると一時的にデータの取得ができなくなる可能性があります。</p>
+
+  <footer>
+    <p>Copyright © 2023 Bit Trade One, LTD. All rights reserved.</p>
+  </footer>
+</body>
